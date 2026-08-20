@@ -23,8 +23,8 @@ jobs:
         run: mvn test
 
      
-      - name: Build WAR
-        run: mvn clean package
+      - name: package maven
+        run: mvn package
 
       - name: Verify WAR
         run: |
@@ -32,10 +32,10 @@ jobs:
              ls -lh target/
                test -f target/TrainBook-1.0.0-SNAPSHOT.war
 
-      - name: Test Tomcat
-        run: |
-          curl -v --connect-timeout 10 \
-             http://${{ secrets.TOMCAT_HOST }}:8080
+     # - name: Test Tomcat
+      #  run: |
+         # curl -v --connect-timeout 10 \
+           #  http://${{ secrets.TOMCAT_HOST }}:8080
 
       - name: Deploy TrainBook WAR
         run: |
