@@ -22,15 +22,29 @@ jobs:
       - name: test with maven
         run: mvn test
 
-      - name: package with maven
-        run: mvn package
+     
+      - name: Build WAR
+        run: mvn clean package
 
-      - name: verfiy the war file
-        run: ls -lh target/
-     # Deploy to Tomcat
-      - name: deploy WAR to Tomcat
-        run: |                
-                curl -v -u ... \
-                 -T target/TrainBook-1.0.0-SNAPSHOT.war \
-                   "http://98.92.86.180:8080/manager/text/deploy?path=/TrainBook&update=true"
-      
+      - name: Verify WAR
+        run: |
+            echo "Files in target:"
+             ls -lh target/
+               test -f target/TrainBook-1.0.0-SNAPSHOT.war
+
+      - name: Test Tomcat
+        run: |
+          curl -v --connect-timeout 10 \
+             http://${{ secrets.TOMCAT_HOST }}:8080
+
+      - name: Deploy TrainBook WAR
+        run: |
+          curl -v \
+           -u "${{ secrets.TOMCAT_USERNAME }}:${{ secrets.TOMCAT_PASSWORD }}" \
+           -T "target/TrainBook-1.0.0-SNAPSHOT.war" \
+           "http://${{ secrets.TOMCAT_HOST }}:8080/manager/text/deploy?path=/TrainBook&update=true"
+
+      - name: Verify TrainBook deployment
+        run: |
+          curl -u "${{ secrets.TOMCAT_USERNAME }}:${{ secrets.TOMCAT_PASSWORD }}" \
+          http://${{ secrets.TOMCAT_HOST }}:8080/manager/text/list
