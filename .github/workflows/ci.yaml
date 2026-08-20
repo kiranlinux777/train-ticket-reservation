@@ -27,7 +27,7 @@ jobs:
 
       - name: verfiy the war file
         run: ls -lh target/
-     #Deploy to Tomcat
+     # Deploy to Tomcat
       - name: deploy WAR to Tomcat
         run: |
                 curl -v -u "${{ secrets.TOMCAT_USERNAME }}:${{ secrets.TOMCAT_PASSWORD }}" \
